@@ -1,0 +1,90 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, roc_auc_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
+# Load dataset
+url = "https://raw.githubusercontent.com/rahulbordoloi/ML-Datasets/main/heart.csv"
+df = pd.read_csv(url)
+
+# Basic info
+print("Data shape:", df.shape)
+print("Target classes:", df['target'].value_counts().to_dict())
+
+# Features and target
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.2, random_state=42)
+
+# Feature scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Define models
+models = {
+    'Logistic Regression': LogisticRegression(),
+    'SVM': SVC(probability=True),
+    'Random Forest': RandomForestClassifier(n_estimators=100),
+    'XGBoost': XGBClassifier(use_label_encoder=False, eval_metric='logloss')
+}
+
+# Train and evaluate
+for name, model in models.items():
+    print(f"\n=== {name} ===")
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    print(classification_report(y_test, y_pred, digits=4))
+    print("ROC-AUC:", round(roc_auc_score(y_test, y_prob), 4))
+
+
+
+
+OUTPUT :
+
+Data shape: (303, 14)
+Target classes: {1: 165, 0: 138}
+
+=== Logistic Regression ===
+              precision    recall  f1-score   support
+
+           0     0.89       0.84      0.86        28
+           1     0.89       0.93      0.91        33
+
+    accuracy                         0.89        61
+   macro avg     0.89       0.89      0.88        61
+weighted avg     0.89       0.89      0.89        61
+
+ROC-AUC: 0.9384
+
+=== SVM ===
+              precision    recall  f1-score   support
+
+           0     0.89       0.82      0.85        28
+           1     0.87       0.91      0.89        33
+
+    accuracy                         0.87        61
+   macro avg     0.88       0.86      0.87        61
+weighted avg     0.88       0.87      0.87        61
+
+ROC-AUC: 0.9242
+
+=== Random Forest ===
+              precision    recall  f1-score   support
+
+           0     0.90       0.86      0.88        28
+           1     0.89       0.91      0.90        33
+
+    accuracy                         0.89        61
+   macro avg     0.89       0.89      0.89        61
+weighted avg     0.89       0.89      0.89        61
+
+ROC-AUC:
