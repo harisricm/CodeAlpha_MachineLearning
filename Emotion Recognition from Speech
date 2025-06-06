@@ -65,3 +65,29 @@ print(f"Test Accuracy: {acc:.2f}")
 
 # Optional: Save model
 # model.save("emotion_recognition_lstm.h5")
+
+
+
+OUTPUT:
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+lstm (LSTM)                  (None, 174, 128)          87040
+dropout (Dropout)            (None, 174, 128)          0
+lstm_1 (LSTM)                (None, 64)                49408
+dropout_1 (Dropout)          (None, 64)                0
+dense (Dense)                (None, 32)                2080
+dense_1 (Dense)              (None, 8)                 264
+=================================================================
+Total params: 138,792
+Trainable params: 138,792
+_________________________________________________________________
+
+Epoch 1/30
+72/72 [==============================] - 12s 108ms/step - loss: 1.9467 - accuracy: 0.2321 - val_loss: 1.8650 - val_accuracy: 0.2812
+Epoch 2/30
+72/72 [==============================] - 6s 88ms/step - loss: 1.7602 - accuracy: 0.3274 - val_loss: 1.6275 - val_accuracy: 0.4071
+...
+Epoch 30/30
+72/72 [==============================] - 6s 89ms/step - loss: 0.3901 - accuracy: 0.8643 - val_loss: 0.7608 - val_accuracy: 0.7554
